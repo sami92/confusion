@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import logo from './logo.svg';
 import {Navbar, NavbarBrand} from 'reactstrap'
-import './App.css';
+import Menu from './components/MenuComponent'
 
 
 // function App() {
@@ -20,6 +20,7 @@ class App extends Component{
                <NavbarBrand href="/">Restornate confusion</NavbarBrand>
              </div>
            </Navbar>
+           <Menu />
           </div>
         );
   }
