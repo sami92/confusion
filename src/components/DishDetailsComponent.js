@@ -21,7 +21,7 @@ function RenderDish({ dish }) {
     );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
     if (comments != null) {
         const listedComments = comments.map((comment) => {
             return (
@@ -39,7 +39,7 @@ function RenderComments({ comments }) {
                     {listedComments}
                 </div>
                 <div className="row">
-                    <CommentForm />
+                    <CommentForm dishId={dishId} addComment={addComment} />
                 </div>
             </div>
         );
@@ -68,7 +68,10 @@ const DishDetails = (props) => {
                 </div>
                 <div className='row'>
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments}
+                        addComment={props.addComment}
+                        dishId={props.dish.id}
+                    />
                 </div>
 
             </div>
@@ -94,10 +97,9 @@ class CommentForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     };
 
-    handleSubmit( values) {
-        
-        console.log("values:" +JSON.stringify( values))
-        alert("values:" + JSON.stringify( values))
+    handleSubmit(values) {
+        this.toggleModal();
+        this.props.addComment(this.props.dishId,values.rating,values.author,values.comment)
     }
 
     toggleModal() {
@@ -118,7 +120,7 @@ class CommentForm extends Component {
                             <Row className="form-group">
                                 <Label htmlFor="rating">Rating</Label>
                                 <Control.select model=".rating" id="rating" name="rating"
-                                     className="form-control" >
+                                    className="form-control" >
                                     <option >1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -127,8 +129,8 @@ class CommentForm extends Component {
                                 </Control.select>
                             </Row>
                             <Row className="form-group">
-                                <Label htmlFor="auther">Your Name</Label>
-                                <Control.text model=".auther" id="auther" name="auther"
+                                <Label htmlFor="author">Your Name</Label>
+                                <Control.text model=".author" id="author" name="author"
                                     className="form-control"
                                     placeholder="Your Name"
                                     validators={{
@@ -137,7 +139,7 @@ class CommentForm extends Component {
                                 />
                                 <Errors
                                     className="text-danger"
-                                    model=".auther"
+                                    model=".author"
                                     show="touched"
                                     messages={{
                                         minLength: 'Must be greater than 2 characters',
