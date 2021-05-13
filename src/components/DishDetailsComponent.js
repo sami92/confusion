@@ -5,21 +5,22 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { Control, LocalForm, Errors } from 'react-redux-form'
+import { Loading } from './LoadingComponent';
 
+    function RenderDish({ dish }) {
+        return (
+            <div key={dish.id} className='col-12 col-md-5 m-1'>
+                <Card>
+                    <CardImg width="100%" src={dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </div>
+        );
+    }
 
-function RenderDish({ dish }) {
-    return (
-        <div key={dish.id} className='col-12 col-md-5 m-1'>
-            <Card>
-                <CardImg width="100%" src={dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-        </div>
-    );
-}
 
 function RenderComments({ comments, addComment, dishId }) {
     if (comments != null) {
@@ -52,8 +53,26 @@ function RenderComments({ comments, addComment, dishId }) {
 }
 
 const DishDetails = (props) => {
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
 
-    if (props.dish != null) {
+    else if (props.errMess){
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else if (props.dish != null) {
         return (
             <div className='container'>
                 <div className="row">
@@ -99,7 +118,7 @@ class CommentForm extends Component {
 
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComment(this.props.dishId,values.rating,values.author,values.comment)
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment)
     }
 
     toggleModal() {
